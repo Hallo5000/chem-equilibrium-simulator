@@ -25,7 +25,7 @@ tasks.withType<JavaCompile> {
 
 application {
     mainModule.set("de.hallo5000.chemequilibriumsimulator")
-    mainClass.set("de.hallo5000.chemequilibriumsimulator.HelloApplication")
+    mainClass.set("de.hallo5000.chemequilibriumsimulator.MainApplication")
 }
 
 javafx {
