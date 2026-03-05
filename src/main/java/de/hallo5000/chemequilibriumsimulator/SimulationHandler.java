@@ -1,5 +1,7 @@
 package de.hallo5000.chemequilibriumsimulator;
 
+import javafx.scene.layout.AnchorPane;
+
 import java.util.ArrayList;
 
 public class SimulationHandler {
@@ -20,15 +22,32 @@ public class SimulationHandler {
 
     public void initSim(){
         for(int i = 0; i < particleCountA; i++){
-            particlesA.add(new Particle(0, new int[]{0, 0}));
+            particlesA.add(new Particle(0, 0, new int[]{0, 0}, 0));
         }
         for(int i = 0; i < particleCountB; i++){
-            particlesB.add(new Particle(0, new int[]{0, 0}));
+            particlesB.add(new Particle(0, 0, new int[]{0, 0}, 0));
+        }
+        updateSim();
+        //simLoop(); //start updating simulation every 'tick'
+    }
+
+    private void simLoop(){
+        while(true){
+
         }
     }
 
-    public void stopSim(){
+    private void updateSim(){
+        ArrayList<Particle> allParticles = new ArrayList<>(particlesA);
+        particlesA.addAll(particlesB);
+        AnchorPane simPane = (AnchorPane) MainApplication.scene.lookup("simPane");
+        simPane.getChildren().clear();
+        simPane.getChildren().addAll(allParticles.stream().map(Particle::getCircle).toList());
+    }
 
+    public void stopSim(){
+        particlesA.clear();
+        particlesB.clear();
     }
 
     public boolean collision(Particle a, Particle B){
@@ -42,10 +61,10 @@ public class SimulationHandler {
     public void setParticleCountA(int particleCountA){
         if(particleCountA > this.particleCountA){
             for(int i = 0; i < particleCountA - this.particleCountA; i++){
-                particlesA.add(new Particle(0, new int[]{0, 0}));
+                particlesA.add(new Particle(0, 0, new int[]{0, 0}, 0));
             }
         }else if(particleCountA < this.particleCountA){
-            for(int i = 0; i < particleCountA - this.particleCountA; i++){
+            for(int i = 0; i < this.particleCountA - particleCountA; i++){
                 particlesA.remove(null);
             }
         }
@@ -59,10 +78,10 @@ public class SimulationHandler {
     public void setParticleCountB(int particleCountB){
         if(particleCountB > this.particleCountB){
             for(int i = 0; i < particleCountB - this.particleCountB; i++){
-                particlesB.add(new Particle(0, new int[]{0, 0}));
+                particlesB.add(new Particle(0, 0, new int[]{0, 0}, 0));
             }
         }else if(particleCountB < this.particleCountB){
-            for(int i = 0; i < particleCountB - this.particleCountB; i++){
+            for(int i = 0; i < this.particleCountB - particleCountB; i++){
                 particlesB.remove(null);
             }
         }

@@ -29,7 +29,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Controls" />
+                        <Label text="Control Panel" />
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#startSim" text="Start">
@@ -45,19 +45,19 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                      <children>
                         <Label text="Particle Count A" />
-                        <Slider fx:id="sliderParticleCountA"/>
+                        <Slider fx:id="sliderParticleCountA" />
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                      <children>
                         <Label text="Particle Count B" />
-                        <Slider fx:id="sliderParticleCountB"/>
+                        <Slider fx:id="sliderParticleCountB" />
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
                      <children>
                         <Label text="avg initial particle speed" />
-                        <Slider fx:id="sliderAvgSpeed"/>
+                        <Slider fx:id="sliderAvgSpeed" />
                      </children>
                   </VBox>
                </children>
@@ -66,7 +66,7 @@
       </AnchorPane>
       <SplitPane dividerPositions="0.6932989690721649" orientation="VERTICAL" prefHeight="200.0" prefWidth="590.0" style="-fx-background-color: #CCCCCC;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane fx:id="simPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <Label text="Simulation" />
                </children>

@@ -8,12 +8,13 @@ import java.io.IOException;
 
 public class MainApplication extends javafx.application.Application {
 
+    public static Scene scene;
     private SimulationHandler simulationHandler;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 450);
+        scene = new Scene(fxmlLoader.load(), 800, 450);
 
         MainController controller = fxmlLoader.getController();
         simulationHandler = new SimulationHandler(0, 0, 0.0);
