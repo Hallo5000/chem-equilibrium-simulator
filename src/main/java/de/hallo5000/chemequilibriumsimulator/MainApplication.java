@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApplication extends javafx.application.Application {
+
+    private SimulationHandler simulationHandler;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
@@ -14,5 +17,8 @@ public class MainApplication extends javafx.application.Application {
         stage.setTitle("ChemicalEquilibriumSimulator");
         stage.setScene(scene);
         stage.show();
+
+        simulationHandler = new SimulationHandler(0, 0, 0);
+
     }
 }
