@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class SimulationHandler {
 
-    private final int particleCountA;
-    private final int particleCountB;
-    private final int avgInitParticleSpeed;
+    private int particleCountA;
+    private int particleCountB;
+    private int avgInitParticleSpeed;
     private final ArrayList<Particle> particlesA = new ArrayList<Particle>();
     private final ArrayList<Particle> particlesB = new ArrayList<Particle>();
 
@@ -39,12 +39,42 @@ public class SimulationHandler {
         return particleCountA;
     }
 
+    public void setParticleCountA(int particleCountA){
+        if(particleCountA > this.particleCountA){
+            for(int i = 0; i < particleCountA - this.particleCountA; i++){
+                particlesA.add(new Particle(0, new int[]{0, 0}));
+            }
+        }else if(particleCountA < this.particleCountA){
+            for(int i = 0; i < particleCountA - this.particleCountA; i++){
+                particlesA.remove(null);
+            }
+        }
+        this.particleCountA = particleCountA;
+    }
+
     public int getParticleCountB(){
         return particleCountB;
     }
 
+    public void setParticleCountB(int particleCountB){
+        if(particleCountB > this.particleCountB){
+            for(int i = 0; i < particleCountB - this.particleCountB; i++){
+                particlesB.add(new Particle(0, new int[]{0, 0}));
+            }
+        }else if(particleCountB < this.particleCountB){
+            for(int i = 0; i < particleCountB - this.particleCountB; i++){
+                particlesB.remove(null);
+            }
+        }
+        this.particleCountB = particleCountB;
+    }
+
     public int getAvgInitParticleSpeed(){
         return avgInitParticleSpeed;
+    }
+
+    public void setAvgInitParticleSpeed(int avgInitParticleSpeed){
+        this.avgInitParticleSpeed = avgInitParticleSpeed;
     }
 
     public ArrayList<Particle> getParticlesA(){
