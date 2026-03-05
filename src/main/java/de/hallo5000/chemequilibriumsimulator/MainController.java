@@ -27,15 +27,37 @@ public class MainController {
         sliderAvgSpeed.setMin(0);
         sliderAvgSpeed.setMax(1);
         sliderAvgSpeed.setValue(0.5);
+
+        sliderParticleCountA.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulationHandler != null) {
+                simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue());
+            }
+        });
+
+        sliderParticleCountB.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulationHandler != null) {
+                simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue());
+            }
+        });
+
+        sliderAvgSpeed.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulationHandler != null) {
+                simulationHandler.setAvgInitParticleSpeed(sliderAvgSpeed.getValue());
+            }
+        });
     }
 
     @FXML void startSim() {
         int countA = (int) sliderParticleCountA.getValue();
         int countB = (int) sliderParticleCountB.getValue();
-        int avgSpeed = (int) sliderAvgSpeed.getValue();
+        double avgSpeed = sliderAvgSpeed.getValue();
 
-        simulationHandler = new SimulationHandler(countA, countB, avgSpeed);
-        simulationHandler.initSim();
+        if (simulationHandler != null) {
+            simulationHandler.setParticleCountA(countA);
+            simulationHandler.setParticleCountB(countB);
+            simulationHandler.setAvgInitParticleSpeed(avgSpeed);
+            simulationHandler.initSim();
+        }
     }
 
     @FXML public void stopSim() {

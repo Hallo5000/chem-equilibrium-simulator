@@ -16,7 +16,7 @@ public class MainApplication extends javafx.application.Application {
         Scene scene = new Scene(fxmlLoader.load(), 800, 450);
 
         MainController controller = fxmlLoader.getController();
-        simulationHandler = new SimulationHandler(0, 0, 0);
+        simulationHandler = new SimulationHandler(0, 0, 0.0);
         controller.setSimulationHandler(simulationHandler);
 
         stage.setTitle("ChemicalEquilibriumSimulator");

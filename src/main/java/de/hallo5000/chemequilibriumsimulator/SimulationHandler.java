@@ -6,13 +6,13 @@ public class SimulationHandler {
 
     private int particleCountA;
     private int particleCountB;
-    private int avgInitParticleSpeed;
+    private double avgInitParticleSpeed;
     private final ArrayList<Particle> particlesA = new ArrayList<Particle>();
     private final ArrayList<Particle> particlesB = new ArrayList<Particle>();
 
     private final int COLLISION_THRESHOLD = 500;
 
-    public SimulationHandler(int particleCountA, int particleCountB, int avgInitParticleSpeed){
+    public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed){
         this.particleCountA = particleCountA;
         this.particleCountB = particleCountB;
         this.avgInitParticleSpeed = avgInitParticleSpeed;
@@ -69,11 +69,11 @@ public class SimulationHandler {
         this.particleCountB = particleCountB;
     }
 
-    public int getAvgInitParticleSpeed(){
+    public double getAvgInitParticleSpeed(){
         return avgInitParticleSpeed;
     }
 
-    public void setAvgInitParticleSpeed(int avgInitParticleSpeed){
+    public void setAvgInitParticleSpeed(double avgInitParticleSpeed){
         this.avgInitParticleSpeed = avgInitParticleSpeed;
     }
 
