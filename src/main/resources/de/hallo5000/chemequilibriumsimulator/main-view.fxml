@@ -22,13 +22,19 @@
 
                <!-- Slider for Particle Count A -->
                <VBox spacing="5.0">
-                  <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Particle Count A" />
+                  <HBox spacing="5.0">
+                     <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Particle Count A:" />
+                     <Label fx:id="ParticleCountAOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="10" />
+                  </HBox>
                   <Slider fx:id="sliderParticleCountA" style="-fx-control-inner-background: #1E4A6E; -fx-accent: #2A6496;" />
                </VBox>
 
                <!-- Slider for Particle Count B -->
                <VBox spacing="5.0">
-                  <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Particle Count B" />
+                  <HBox spacing="5.0">
+                     <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Particle Count B:" />
+                     <Label fx:id="ParticleCountBOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="10" />
+                  </HBox>
                   <Slider fx:id="sliderParticleCountB" style="-fx-control-inner-background: #1E4A6E; -fx-accent: #2A6496;" />
                </VBox>
 

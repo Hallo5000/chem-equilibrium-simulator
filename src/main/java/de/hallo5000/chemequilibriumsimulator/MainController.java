@@ -1,6 +1,7 @@
 package de.hallo5000.chemequilibriumsimulator;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 
 public class MainController {
@@ -8,6 +9,10 @@ public class MainController {
     @FXML private Slider sliderParticleCountA;
     @FXML private Slider sliderParticleCountB;
     @FXML private Slider sliderAvgSpeed;
+
+    //Output der Sliderwerte
+    @FXML private Label ParticleCountAOutput;
+    @FXML private Label ParticleCountBOutput;
 
     private SimulationHandler simulationHandler;
 
@@ -31,12 +36,14 @@ public class MainController {
         sliderParticleCountA.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
                 simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue());
+                ParticleCountAOutput.setText(Integer.toString(simulationHandler.getParticleCountA()));
             }
         });
 
         sliderParticleCountB.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
                 simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue());
+                ParticleCountBOutput.setText(Integer.toString(simulationHandler.getParticleCountB()));
             }
         });
 
