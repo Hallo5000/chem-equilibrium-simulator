@@ -14,15 +14,16 @@ public class Particle {
         B
     }
     private final Circle circle;
-    private int[] direction_vec;
+    private double[] direction_vec;
     private int speed;
     private State state;
 
     public static int RADIUS = 10;
 
-    public Particle(double[] coords, int[] directionVec, int speed, AnchorPane simPane, State state) {
+    public Particle(double[] coords, double[] directionVec, int speed, AnchorPane simPane, State state) {
         Paint paint = state == State.A ? Paint.valueOf("#BA6F02") : Paint.valueOf("#822B4A");
-        this.circle = new Circle(simPane.getLayoutX()+coords[0]+(double)RADIUS/2, simPane.getLayoutY()+coords[1]+(double)RADIUS/2, RADIUS, paint);
+        this.circle = new Circle(simPane.getLayoutX()+coords[0]+(double)RADIUS/2,
+                simPane.getLayoutY()+coords[1]+(double)RADIUS/2, RADIUS, paint);
         simPane.getChildren().add(this.circle);
         this.direction_vec = directionVec;
         this.speed = speed;
@@ -33,11 +34,11 @@ public class Particle {
         return circle;
     }
 
-    public int[] getDirection_vec() {
+    public double[] getDirection_vec() {
         return direction_vec;
     }
 
-    public void setDirection_vec(int[] direction_vec) {
+    public void setDirection_vec(double[] direction_vec) {
         this.direction_vec = direction_vec;
     }
 

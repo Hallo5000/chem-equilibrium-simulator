@@ -1,5 +1,6 @@
 package de.hallo5000.chemequilibriumsimulator;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 
@@ -27,41 +28,68 @@ public class SimulationHandler {
     }
 
     public void initSim(){
-        stopSim();
+        allParticles.clear();
+        simPane.getChildren().clear();//clear the arraylist and simPane
         for(int i = 0; i < particleCountA; i++){
             double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.A));
+            allParticles.add(new Particle(coords, new double[]{1, 1}, 0, simPane, Particle.State.A));
         }
         for(int i = 0; i < particleCountB; i++){
             double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.B));
+            allParticles.add(new Particle(coords, new double[]{1, 1}, 0, simPane, Particle.State.B));
         }
-        updateSim();
-        //simLoop(); //start updating simulation every 'tick'
+        simLoop(); //start moving particles
     }
 
-    private void simLoop(){
-        while(true){
-
-        }
+    private void simLoop(){ //TODO: replace with solution bound to cpu instead of fps and fixed timestep instead of delta time
+        AnimationTimer timer = new AnimationTimer() {
+            long lastUpdate = 0;
+            @Override
+            public void handle(long now) {
+                double delta = (now-lastUpdate) / 1000000.0; //in milliseconds
+                if(delta >= 10){//100 updates per second
+                    lastUpdate = now;
+                    updateSim();
+                }
+            }
+        };
+        timer.start();
     }
 
     private void updateSim(){
-        for(Particle p : allParticles){
-            if(!simPane.getChildren().contains(p.getCircle())){
-                p.getCircle().setCenterX(simPane.getLayoutX()+p.getCircle().getCenterX()+ (double) Particle.RADIUS /2);
-                p.getCircle().setCenterY(simPane.getLayoutY()+p.getCircle().getCenterY()+ (double) Particle.RADIUS /2);
-                simPane.getChildren().add(p.getCircle());
+        for(Particle p1 : allParticles){
+            double maxFactorX = 1;//max factor for the direction vector to hit the border on the x-axis on
+            if(p1.getDirection_vec()[0] > 0){
+                maxFactorX = ((simPane.getLayoutX()+simPane.getWidth())-(p1.getCircle().getCenterX()+Particle.RADIUS))/p1.getDirection_vec()[0];
+            }else if(p1.getDirection_vec()[0] < 0){
+                maxFactorX = (simPane.getLayoutX()-(p1.getCircle().getCenterX()+Particle.RADIUS))/p1.getDirection_vec()[0];
+            }
+            double maxFactorY = 1;//max factor for the direction vector to hit the border on the y-axis on
+            if(p1.getDirection_vec()[1] > 0){
+                maxFactorY = ((simPane.getLayoutY()+simPane.getHeight())-(p1.getCircle().getCenterY()+Particle.RADIUS))/p1.getDirection_vec()[1];
+            }else if(p1.getDirection_vec()[1] < 0){
+                maxFactorY = (simPane.getLayoutY()-(p1.getCircle().getCenterY()+Particle.RADIUS))/p1.getDirection_vec()[1];
+            }
+
+            for(Particle p2 : allParticles){
+                if(p1 == p2) continue;
+            }
+            System.out.println("maxFactorX: "+maxFactorX);
+            System.out.println("maxFactorY: "+maxFactorY);
+            if(maxFactorX >= 1 && maxFactorY >= 1){
+                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec()[0]);
+                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec()[1]);
             }
         }
     }
 
     public void stopSim(){
+        particleCountA = 0;
+        particleCountB = 0;
         allParticles.clear();
         simPane.getChildren().clear();
-        updateSim();
     }
 
     public boolean collision(Particle a, Particle b){
@@ -95,7 +123,7 @@ public class SimulationHandler {
             for(int i = 0; i < particleCountA - this.particleCountA; i++){
                 double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.A));
+                allParticles.add(new Particle(coords, new double[]{0, 0}, 0, simPane, Particle.State.A));
             }
         }else if(particleCountA < this.particleCountA){
             for(int i = 0; i < this.particleCountA - particleCountA; i++){
@@ -118,7 +146,7 @@ public class SimulationHandler {
             for(int i = 0; i < particleCountB - this.particleCountB; i++){
                 double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.B));
+                allParticles.add(new Particle(coords, new double[]{0, 0}, 0, simPane, Particle.State.B));
             }
         }else if(particleCountB < this.particleCountB){
             for(int i = 0; i < this.particleCountB - particleCountB; i++){
