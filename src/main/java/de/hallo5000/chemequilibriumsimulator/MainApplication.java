@@ -9,7 +9,7 @@ import java.io.IOException;
 public class MainApplication extends javafx.application.Application {
 
     public static Scene scene;
-    private SimulationHandler simulationHandler;
+    static SimulationHandler simulationHandler;
 
     @Override
     public void start(Stage stage) throws IOException {

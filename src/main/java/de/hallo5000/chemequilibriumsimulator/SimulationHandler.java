@@ -1,8 +1,11 @@
 package de.hallo5000.chemequilibriumsimulator;
 
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SimulationHandler {
 
@@ -39,10 +42,17 @@ public class SimulationHandler {
 
     private void updateSim(){
         ArrayList<Particle> allParticles = new ArrayList<>(particlesA);
-        particlesA.addAll(particlesB);
-        AnchorPane simPane = (AnchorPane) MainApplication.scene.lookup("simPane");
+        allParticles.addAll(particlesB);
+        AnchorPane simPane = (AnchorPane) MainApplication.scene.lookup("#simPane");
         simPane.getChildren().clear();
-        simPane.getChildren().addAll(allParticles.stream().map(Particle::getCircle).toList());
+        simPane.getChildren().addAll(allParticles.stream().map(p ->{
+            if(!p.displayed){
+                p.getCircle().setCenterX(simPane.getLayoutX() + p.getCircle().getCenterX() + (double) Particle.RADIUS/2);
+                p.getCircle().setCenterY(simPane.getLayoutY() + p.getCircle().getCenterY() + (double) Particle.RADIUS/2);
+            }
+            p.displayed = true;
+            return p.getCircle();
+        }).toList());
     }
 
     public void stopSim(){
@@ -52,6 +62,26 @@ public class SimulationHandler {
 
     public boolean collision(Particle a, Particle B){
         return false;
+    }
+
+    public double[] calcRandFreeCoords(){
+        double x = 0;
+        double y = 0;
+        x = new Random().nextDouble() * ((AnchorPane) MainApplication.scene.lookup("#simPane")).getWidth() - Particle.RADIUS;
+        y = new Random().nextDouble() * ((AnchorPane) MainApplication.scene.lookup("#simPane")).getHeight() - Particle.RADIUS;
+        System.out.println("x: "+x + " y: "+y);
+        boolean intersects = false;
+        for(Node node : ((AnchorPane) MainApplication.scene.lookup("#simPane")).getChildren()){
+            if(node instanceof Circle c){
+                if(Math.sqrt(x - c.getCenterX() * x - c.getCenterX() + y - c.getCenterY() * y - c.getCenterY()) - Particle.RADIUS*2 < 0){
+                    intersects = true;
+                    break;
+                }
+            }
+        }
+        double[] finalCoords = new double[]{x, y};
+        if(x < 0 || y < 0 || intersects) finalCoords = calcRandFreeCoords();
+        return finalCoords;
     }
 
     public int getParticleCountA(){

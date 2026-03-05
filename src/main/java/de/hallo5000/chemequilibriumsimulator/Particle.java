@@ -14,8 +14,12 @@ public class Particle {
     private final int[] direction_vec;
     private final int speed;
 
+    public boolean displayed = false;
+    public static int RADIUS = 10;
+
     public Particle(int x, int y, int[] directionVec, int speed) {
-        this.circle = new Circle(x, y, 20, Paint.valueOf("#000000"));
+        double[] coords = MainApplication.simulationHandler.calcRandFreeCoords();
+        this.circle = new Circle(coords[0], coords[1], RADIUS, Paint.valueOf("#000000"));
         this.direction_vec = directionVec;
         this.speed = speed;
     }
