@@ -9,10 +9,13 @@ public class MainController {
     @FXML private Slider sliderParticleCountA;
     @FXML private Slider sliderParticleCountB;
     @FXML private Slider sliderAvgSpeed;
+    @FXML private Slider sliderActivationEnergy;
 
     //Output der slider values
     @FXML private Label ParticleCountAOutput;
     @FXML private Label ParticleCountBOutput;
+    @FXML private Label avgSpeedOutput;
+    @FXML private Label activationEnergyOutput;
 
     private SimulationHandler simulationHandler;
 
@@ -33,6 +36,10 @@ public class MainController {
         sliderAvgSpeed.setMax(1);
         sliderAvgSpeed.setValue(0.5);
 
+        sliderActivationEnergy.setMin(0);
+        sliderActivationEnergy.setMax(100);
+        sliderActivationEnergy.setValue(50);
+
         sliderParticleCountA.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
                 sliderParticleCountA.setValue(simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue()));
@@ -50,6 +57,14 @@ public class MainController {
         sliderAvgSpeed.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
                 simulationHandler.setAvgInitParticleSpeed(sliderAvgSpeed.getValue());
+                avgSpeedOutput.setText(String.format("%.2f", simulationHandler.getAvgInitParticleSpeed()));
+            }
+        });
+
+        sliderActivationEnergy.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulationHandler != null) {
+                simulationHandler.setActivationEnergy(sliderActivationEnergy.getValue());
+                activationEnergyOutput.setText(Integer.toString((int) simulationHandler.getActivationEnergy()));
             }
         });
     }
@@ -58,11 +73,13 @@ public class MainController {
         int countA = (int) sliderParticleCountA.getValue();
         int countB = (int) sliderParticleCountB.getValue();
         double avgSpeed = sliderAvgSpeed.getValue();
+        double activationEnergy = sliderActivationEnergy.getValue();
 
         if (simulationHandler != null) {
             simulationHandler.setParticleCountA(countA);
             simulationHandler.setParticleCountB(countB);
             simulationHandler.setAvgInitParticleSpeed(avgSpeed);
+            simulationHandler.setActivationEnergy(activationEnergy);
             simulationHandler.initSim();
         }
     }

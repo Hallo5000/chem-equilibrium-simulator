@@ -40,8 +40,20 @@
 
                <!-- Slider for Avg Speed -->
                <VBox spacing="5.0">
-                  <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Avg Initial Speed" />
+                  <HBox spacing="5.0">
+                    <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Avg Initial Speed" />
+                    <Label fx:id="avgSpeedOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="0.5" />
+                  </HBox>
                   <Slider fx:id="sliderAvgSpeed" style="-fx-control-inner-background: #1E4A6E; -fx-accent: #2A6496;" />
+               </VBox>
+
+               <!-- Slider for Activation Energy -->
+               <VBox spacing="5.0">
+                   <HBox spacing="5.0">
+                       <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Activation Energy" />
+                       <Label fx:id="activationEnergyOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="50" />
+                   </HBox>
+                   <Slider fx:id="sliderActivationEnergy" style="-fx-control-inner-background: #1E4A6E; -fx-accent: #2A6496;" />
                </VBox>
 
             </VBox>
