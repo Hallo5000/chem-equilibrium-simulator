@@ -25,11 +25,16 @@ public class SimulationHandler {
     }
 
     public void initSim(){
+        stopSim();
         for(int i = 0; i < particleCountA; i++){
-            allParticles.add(new Particle(new int[]{0, 0}, 0, simPane, Particle.State.A));
+            double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+            if(coords == null) break;
+            allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.A));
         }
         for(int i = 0; i < particleCountB; i++){
-            allParticles.add(new Particle(new int[]{0, 0}, 0, simPane, Particle.State.B));
+            double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+            if(coords == null) break;
+            allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.B));
         }
         updateSim();
         //simLoop(); //start updating simulation every 'tick'
@@ -57,12 +62,13 @@ public class SimulationHandler {
         updateSim();
     }
 
-    public boolean collision(Particle a, Particle B){
+    public boolean collision(Particle a, Particle b){
         return false;
     }
 
-    public double[] calcRandFreeCoords(){
-        double x = new Random().nextDouble() * simPane.getWidth() - Particle.RADIUS;;
+    public double[] calcRandFreeCoords(int remainingTries){
+        if(remainingTries <= 0) return null;
+        double x = new Random().nextDouble() * simPane.getWidth() - Particle.RADIUS;
         double y = new Random().nextDouble() * simPane.getHeight() - Particle.RADIUS;
         System.out.println("x: "+x + " y: "+y);
         boolean intersects = simPane.getChildren().stream().anyMatch(node -> {
@@ -74,7 +80,7 @@ public class SimulationHandler {
             return false;
         });
         double[] finalCoords = new double[]{x, y};
-        if(x < 0 || y < 0 || intersects) finalCoords = calcRandFreeCoords();
+        if(x < 0 || y < 0 || intersects) finalCoords = calcRandFreeCoords(remainingTries-1);
         return finalCoords;
     }
 
@@ -82,38 +88,46 @@ public class SimulationHandler {
         return particleCountA;
     }
 
-    public void setParticleCountA(int particleCountA){
+    public int setParticleCountA(int particleCountA){
         if(particleCountA > this.particleCountA){
             for(int i = 0; i < particleCountA - this.particleCountA; i++){
-                allParticles.add(new Particle(new int[]{0, 0}, 0, simPane, Particle.State.A));
+                double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+                if(coords == null) break;
+                allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.A));
             }
         }else if(particleCountA < this.particleCountA){
             for(int i = 0; i < this.particleCountA - particleCountA; i++){
-                Particle toRemove = getParticlesA().get(new Random().nextInt(getParticleCountA()));
+                Particle toRemove = getParticlesA().get(new Random().nextInt(getParticlesA().size()));
                 allParticles.remove(toRemove);
                 simPane.getChildren().remove(toRemove.getCircle());
             }
         }
         this.particleCountA = particleCountA;
+        if(allParticles.size() != particleCountA+particleCountB) this.particleCountA = allParticles.size()-particleCountB;
+        return this.particleCountA;
     }
 
     public int getParticleCountB(){
         return particleCountB;
     }
 
-    public void setParticleCountB(int particleCountB){
+    public int setParticleCountB(int particleCountB){
         if(particleCountB > this.particleCountB){
             for(int i = 0; i < particleCountB - this.particleCountB; i++){
-                allParticles.add(new Particle(new int[]{0, 0}, 0, simPane, Particle.State.B));
+                double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+                if(coords == null) break;
+                allParticles.add(new Particle(coords, new int[]{0, 0}, 0, simPane, Particle.State.B));
             }
         }else if(particleCountB < this.particleCountB){
             for(int i = 0; i < this.particleCountB - particleCountB; i++){
-                Particle toRemove = getParticlesB().get(new Random().nextInt(getParticleCountB()));
+                Particle toRemove = getParticlesB().get(new Random().nextInt(getParticlesB().size()));
                 allParticles.remove(toRemove);
                 simPane.getChildren().remove(toRemove.getCircle());
             }
         }
         this.particleCountB = particleCountB;
+        if(allParticles.size() != particleCountB+particleCountA) this.particleCountB = allParticles.size()-particleCountA;
+        return this.particleCountB;
     }
 
     public double getAvgInitParticleSpeed(){

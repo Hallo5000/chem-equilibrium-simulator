@@ -10,7 +10,7 @@ public class MainController {
     @FXML private Slider sliderParticleCountB;
     @FXML private Slider sliderAvgSpeed;
 
-    //Output der Sliderwerte
+    //Output der slider values
     @FXML private Label ParticleCountAOutput;
     @FXML private Label ParticleCountBOutput;
 
@@ -35,14 +35,14 @@ public class MainController {
 
         sliderParticleCountA.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue());
+                sliderParticleCountA.setValue(simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue()));
                 ParticleCountAOutput.setText(Integer.toString(simulationHandler.getParticleCountA()));
             }
         });
 
         sliderParticleCountB.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue());
+                sliderParticleCountB.setValue(simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue()));
                 ParticleCountBOutput.setText(Integer.toString(simulationHandler.getParticleCountB()));
             }
         });
