@@ -14,11 +14,13 @@ public class MainApplication extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 450);
+
+        MainController controller = fxmlLoader.getController();
+        simulationHandler = new SimulationHandler(0, 0, 0);
+        controller.setSimulationHandler(simulationHandler);
+
         stage.setTitle("ChemicalEquilibriumSimulator");
         stage.setScene(scene);
         stage.show();
-
-        simulationHandler = new SimulationHandler(0, 0, 0);
-
     }
 }

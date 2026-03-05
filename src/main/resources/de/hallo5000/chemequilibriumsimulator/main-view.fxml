@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #15344D;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #15344D;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hallo5000.chemequilibriumsimulator.MainController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" prefWidth="180.0" style="-fx-background-color: #CCCCCC;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -28,19 +28,19 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                      <children>
                         <Label text="Particle Count A" />
-                        <Slider />
+                        <Slider fx:id="sliderParticleCountA"/>
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                      <children>
                         <Label text="Particle Count B" />
-                        <Slider />
+                        <Slider fx:id="sliderParticleCountB"/>
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
                      <children>
                         <Label text="avg initial particle speed" />
-                        <Slider />
+                        <Slider fx:id="sliderAvgSpeed"/>
                      </children>
                   </VBox>
                </children>
