@@ -3,6 +3,8 @@ package de.hallo5000.chemequilibriumsimulator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 public class MainController {
 
@@ -16,6 +18,13 @@ public class MainController {
     @FXML private Label ParticleCountBOutput;
     @FXML private Label avgSpeedOutput;
     @FXML private Label activationEnergyOutput;
+
+    // Particle Bar
+    @FXML private HBox particleBar;
+    @FXML private Region barA;
+    @FXML private Region barB;
+    @FXML private Label labelCountA;
+    @FXML private Label labelCountB;
 
     private SimulationHandler simulationHandler;
 
@@ -44,6 +53,7 @@ public class MainController {
             if (simulationHandler != null) {
                 sliderParticleCountA.setValue(simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue()));
                 ParticleCountAOutput.setText(Integer.toString(simulationHandler.getParticleCountA()));
+                updateParticleBar(simulationHandler.getParticleCountA(), simulationHandler.getParticleCountB());
             }
         });
 
@@ -51,6 +61,7 @@ public class MainController {
             if (simulationHandler != null) {
                 sliderParticleCountB.setValue(simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue()));
                 ParticleCountBOutput.setText(Integer.toString(simulationHandler.getParticleCountB()));
+                updateParticleBar(simulationHandler.getParticleCountA(), simulationHandler.getParticleCountB());
             }
         });
 
@@ -69,6 +80,20 @@ public class MainController {
         });
     }
 
+    public void updateParticleBar(int countA, int countB) {
+        labelCountA.setText("A: " + countA);
+        labelCountB.setText("B: " + countB);
+        double total = countA + countB;
+        double barlength = particleBar.getWidth();
+        if (total == 0 || barlength == 0) {
+            barA.setPrefWidth(0);
+            barB.setPrefWidth(0);
+            return;
+        }
+        barA.setPrefWidth((countA / total) * barlength);
+        barB.setPrefWidth((countB / total) * barlength);
+    }
+
     @FXML void startSim() {
         int countA = (int) sliderParticleCountA.getValue();
         int countB = (int) sliderParticleCountB.getValue();
@@ -81,12 +106,14 @@ public class MainController {
             simulationHandler.setAvgInitParticleSpeed(avgSpeed);
             simulationHandler.setActivationEnergy(activationEnergy);
             simulationHandler.initSim();
+            updateParticleBar(simulationHandler.getParticleCountA(), simulationHandler.getParticleCountB());
         }
     }
 
     @FXML public void stopSim() {
         if (simulationHandler != null) {
             simulationHandler.stopSim();
+            updateParticleBar(0, 0);
         }
     }
 }
