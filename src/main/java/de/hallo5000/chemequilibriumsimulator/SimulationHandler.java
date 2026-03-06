@@ -1,6 +1,7 @@
 package de.hallo5000.chemequilibriumsimulator;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 
@@ -17,7 +18,8 @@ public class SimulationHandler {
     private final ArrayList<Particle> allParticles = new ArrayList<>();
     private final AnchorPane simPane;
 
-    private final int COLLISION_THRESHOLD = 500;
+    private int gamestate = 0;
+    private AnimationTimer timer;
 
     public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed, double activationEnergy, AnchorPane simPane){
         this.particleCountA = particleCountA;
@@ -28,23 +30,25 @@ public class SimulationHandler {
     }
 
     public void initSim(){
+        if(gamestate == 1) return;
+        gamestate = 1;
         allParticles.clear();
         simPane.getChildren().clear();//clear the arraylist and simPane
         for(int i = 0; i < particleCountA; i++){
-            double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+            Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, new double[]{1, 1}, 0, simPane, Particle.State.A));
+            allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.A));
         }
         for(int i = 0; i < particleCountB; i++){
-            double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+            Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, new double[]{1, 1}, 0, simPane, Particle.State.B));
+            allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.B));
         }
         simLoop(); //start moving particles
     }
 
     private void simLoop(){ //TODO: replace with solution bound to cpu instead of fps and fixed timestep instead of delta time
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             long lastUpdate = 0;
             @Override
             public void handle(long now) {
@@ -61,31 +65,85 @@ public class SimulationHandler {
     private void updateSim(){
         for(Particle p1 : allParticles){
             double maxFactorX = 1;//max factor for the direction vector to hit the border on the x-axis on
-            if(p1.getDirection_vec()[0] > 0){
-                maxFactorX = ((simPane.getLayoutX()+simPane.getWidth())-(p1.getCircle().getCenterX()+Particle.RADIUS))/p1.getDirection_vec()[0];
-            }else if(p1.getDirection_vec()[0] < 0){
-                maxFactorX = (simPane.getLayoutX()-(p1.getCircle().getCenterX()+Particle.RADIUS))/p1.getDirection_vec()[0];
+            if(p1.getDirection_vec().getX() > 0){
+                maxFactorX = ((simPane.getLayoutX()+simPane.getWidth())-(p1.getCircle().getCenterX()+Particle.RADIUS))/p1.getDirection_vec().getX();
+            }else if(p1.getDirection_vec().getX() < 0){
+                maxFactorX = (simPane.getLayoutX()-(p1.getCircle().getCenterX()-Particle.RADIUS))/p1.getDirection_vec().getX();
             }
             double maxFactorY = 1;//max factor for the direction vector to hit the border on the y-axis on
-            if(p1.getDirection_vec()[1] > 0){
-                maxFactorY = ((simPane.getLayoutY()+simPane.getHeight())-(p1.getCircle().getCenterY()+Particle.RADIUS))/p1.getDirection_vec()[1];
-            }else if(p1.getDirection_vec()[1] < 0){
-                maxFactorY = (simPane.getLayoutY()-(p1.getCircle().getCenterY()+Particle.RADIUS))/p1.getDirection_vec()[1];
+            if(p1.getDirection_vec().getY() > 0){
+                maxFactorY = ((simPane.getLayoutY()+simPane.getHeight())-(p1.getCircle().getCenterY()+Particle.RADIUS))/p1.getDirection_vec().getY();
+            }else if(p1.getDirection_vec().getY() < 0){
+                maxFactorY = (simPane.getLayoutY()-(p1.getCircle().getCenterY()-Particle.RADIUS))/p1.getDirection_vec().getY();
             }
 
             for(Particle p2 : allParticles){
                 if(p1 == p2) continue;
+
+                /* solve for t (factor for the vectors at which the particles collide and "end of collision"):
+                   a1 := coords of p1
+                   b1 := vector of p1
+                   a2 := coords of p2
+                   b2 := vector of p2
+                    |(a1+t*b1)-(a2+t*b2)|=2R
+                    -----use d(x) := delta function
+                    |d(a)+t*d(b)|=2R
+                    -----absolute value of vectors |v| := sqrt( (vx)^2 + (vy)^2 )
+                    sqrt((d(ax)+t*d(bx))^2 + (d(ay)+t*d(by))^2)=2R
+                    -----square to get rid of the square root
+                    ((d(ax)+t*d(bx))^2+(d(ay)+t*d(by))^2)=4R^2
+                    -----binomial theorem
+                    ((d(ax)^2+2d(ax)t*d(bx)+t^2d(bx)^2)+(d(ay)^2+2d(ay)d(by)+t^2d(by)^2))=4R^2
+                    -----get rid of a few unnecessary brackets
+                    d(ax)^2+2d(ax)t*d(bx)+t^2d(bx)^2+d(ay)^2+2d(ay)t*d(by)+t^2d(by)^2=4R^2
+                    -----quadratic form
+                    (d(bx)^2+d(by)^2)*t^2+(2d(ax)d(bx)+2d(ay)d(by))*t+(-4R^2+d(ax)^2+d(ay)^2)=0
+                    -----quadratic formula
+                    t1,2=( -(2d(ax)d(bx)+2d(ay)d(by)) +/- sqrt( (2d(ax)d(bx)+2d(ay)d(by))^2 - 4(d(bx)^2+d(by)^2)(-4R^2+d(ax)^2+d(ay)^2) ) )/2(d(bx)^2+d(by)^2)
+                 */
+
+
+                Point2D deltaP = p1.getCoordinates().subtract(p2.getCoordinates());
+                Point2D deltaV = p1.getDirection_vec().subtract(p2.getDirection_vec());
+
+                double factorA = deltaV.dotProduct(deltaV);
+                double factorB = 2*deltaP.getX()*deltaV.getX()+2*deltaP.getY()*deltaV.getY();
+                double factorC = -4*Math.pow(Particle.RADIUS, 2)+deltaP.dotProduct(deltaP);
+
+                if(2*factorA == 0) continue; //extremely unlikely: movement of p1 and p2 is synchronized (e.g. both still standing or same movement vector) this would cause division by 0
+
+                double discriminant = Math.pow(factorB, 2)
+                        - 4*factorA*factorC; // b² - 4ac
+
+                if(discriminant >= 0){ //collision
+                    double t1 = ( -factorB - Math.sqrt(discriminant) )  / (2*factorA); // (-b - sqrt(b^2 - 4ac)) / 2a
+                    double t2 = ( -(factorB) + Math.sqrt(discriminant) ) / (2*factorA); // (-b + sqrt(b^2 - 4ac)) / 2a
+                    System.out.println("TEST2");
+                    if(t1 <= 1 || (t2 <= 1 && t1 < 0)) System.out.println("COLLISION");
+                }
             }
-            System.out.println("maxFactorX: "+maxFactorX);
-            System.out.println("maxFactorY: "+maxFactorY);
+
             if(maxFactorX >= 1 && maxFactorY >= 1){
-                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec()[0]);
-                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec()[1]);
+                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec().getX());
+                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec().getY());
+            }else{
+                double beforeReflect = Math.min(maxFactorX, maxFactorY); //the percentage of the vector applied before reflecting of a wall
+
+                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec().getX()*beforeReflect);
+                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec().getY()*beforeReflect);
+
+                if(maxFactorX < maxFactorY) p1.setDirection_vec(new Point2D(p1.getDirection_vec().getX()*(-1), p1.getDirection_vec().getY()));
+                else p1.setDirection_vec(new Point2D(p1.getDirection_vec().getX(), p1.getDirection_vec().getY()*(-1)));
+
+                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec().getX()*(1-beforeReflect));
+                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec().getY()*(1-beforeReflect));
             }
         }
     }
 
     public void stopSim(){
+        timer.stop();
+        gamestate = 0;
         particleCountA = 0;
         particleCountB = 0;
         allParticles.clear();
@@ -96,22 +154,31 @@ public class SimulationHandler {
         return false;
     }
 
-    public double[] calcRandFreeCoords(int remainingTries){
+    public Point2D genRandomCoords(int remainingTries){
         if(remainingTries <= 0) return null;
         double x = new Random().nextDouble() * simPane.getWidth() - Particle.RADIUS;
         double y = new Random().nextDouble() * simPane.getHeight() - Particle.RADIUS;
         System.out.println("x: "+x + " y: "+y);
         boolean intersects = simPane.getChildren().stream().anyMatch(node -> {
             if(node instanceof Circle c){
-                if(Math.sqrt((x - c.getCenterX()) * (x - c.getCenterX()) + (y - c.getCenterY()) * (y - c.getCenterY())) < Particle.RADIUS*3){
-                    return true;
-                }
+                return Math.sqrt((x - c.getCenterX()) * (x - c.getCenterX()) + (y - c.getCenterY()) * (y - c.getCenterY())) < Particle.RADIUS * 3;
             }
             return false;
         });
-        double[] finalCoords = new double[]{x, y};
-        if(x < 0 || y < 0 || intersects) finalCoords = calcRandFreeCoords(remainingTries-1);
+        Point2D finalCoords = new Point2D(x, y);
+        if(x < 0 || y < 0 || intersects) finalCoords = genRandomCoords(remainingTries-1);
         return finalCoords;
+    }
+
+    public Point2D genRandomVector(){
+        double x = new Random().nextDouble(2.0)-1;//upper bound is excluded,
+        double y = new Random().nextDouble(2.0)-1;//but it doesn't matter since the chance of getting it would be near impossible anyway
+
+        double length = Math.sqrt(x*x + y*y);
+        x = x/length;
+        y = y/length;
+
+        return new Point2D(x, y);
     }
 
     public int getParticleCountA(){
@@ -121,9 +188,9 @@ public class SimulationHandler {
     public int setParticleCountA(int particleCountA){
         if(particleCountA > this.particleCountA){
             for(int i = 0; i < particleCountA - this.particleCountA; i++){
-                double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+                Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, new double[]{0, 0}, 0, simPane, Particle.State.A));
+                allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.A));
             }
         }else if(particleCountA < this.particleCountA){
             for(int i = 0; i < this.particleCountA - particleCountA; i++){
@@ -144,9 +211,9 @@ public class SimulationHandler {
     public int setParticleCountB(int particleCountB){
         if(particleCountB > this.particleCountB){
             for(int i = 0; i < particleCountB - this.particleCountB; i++){
-                double[] coords = MainApplication.simulationHandler.calcRandFreeCoords(100);
+                Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, new double[]{0, 0}, 0, simPane, Particle.State.B));
+                allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.B));
             }
         }else if(particleCountB < this.particleCountB){
             for(int i = 0; i < this.particleCountB - particleCountB; i++){
