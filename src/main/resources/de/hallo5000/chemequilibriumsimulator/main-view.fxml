@@ -80,10 +80,10 @@
                    <VBox spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="15.0">
                        <HBox>
                            <HBox HBox.hgrow="ALWAYS">
-                               <Label fx:id="labelCountA" style="-fx-text-fill: #BA6F02; -fx-font-size: 11px; -fx-font-weight: bold;" text="A: 10" />
+                               <Label fx:id="labelCountA" style="-fx-text-fill: #BA6F02; -fx-font-size: 11px; -fx-font-weight: bold;" text="A: 0" />
                            </HBox>
                            <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
-                               <Label fx:id="labelCountB" style="-fx-text-fill: #822B4A; -fx-font-size: 11px; -fx-font-weight: bold;" text="B: 10" />
+                               <Label fx:id="labelCountB" style="-fx-text-fill: #822B4A; -fx-font-size: 11px; -fx-font-weight: bold;" text="B: 0" />
                            </HBox>
                        </HBox>
                        <HBox fx:id="particleBar" prefHeight="16.0" style="-fx-background-color: #0C1E2D; -fx-background-radius: 8;">

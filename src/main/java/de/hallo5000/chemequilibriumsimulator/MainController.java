@@ -92,6 +92,15 @@ public class MainController {
         }
         barA.setPrefWidth((countA / total) * barlength);
         barB.setPrefWidth((countB / total) * barlength);
+
+        if (countB == 0) {
+            barA.setStyle("-fx-background-color: #BA6F02; -fx-background-radius: 8;");
+        }
+        if (countA == 0) {
+            barB.setStyle("-fx-background-color: #822B4A; -fx-background-radius: 8;");
+        } else {
+            barB.setStyle("-fx-background-color: #822B4A; -fx-background-radius: 0 8 8 0;");
+        }
     }
 
     @FXML void startSim() {
