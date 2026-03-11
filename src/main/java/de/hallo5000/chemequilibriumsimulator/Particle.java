@@ -15,7 +15,7 @@ public class Particle {
         B
     }
 
-    private final Point2D coordinates;
+    private Point2D coordinates;
     private final Circle circle;
     private Point2D direction_vec;
     private int speed;
@@ -36,6 +36,12 @@ public class Particle {
 
     public Point2D getCoordinates() {
         return coordinates;
+    }
+
+    public void setCoordinates(Point2D coordinates) {
+        this.coordinates = coordinates;
+        circle.setCenterX(coordinates.getX());
+        circle.setCenterY(coordinates.getY());
     }
 
     public Circle getCircle(){

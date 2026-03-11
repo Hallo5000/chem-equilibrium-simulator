@@ -1,5 +1,7 @@
 # Todo:
-- Stats: current count(progress bar)
+- Stats: progress bar has display bug in the middle
 - replace fps with cpu bound in sim loop
 - Pause button
-- collision and chem reaction
+- proper reaction/handling for collisions
+- avg initial speed
+- activation energy

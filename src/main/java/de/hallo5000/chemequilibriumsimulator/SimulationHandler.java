@@ -18,6 +18,8 @@ public class SimulationHandler {
     private final ArrayList<Particle> allParticles = new ArrayList<>();
     private final AnchorPane simPane;
 
+    // gamestate == 0 -> simulation is stopped/paused
+    // gamestate == 1 -> simulation is running
     private int gamestate = 0;
     private AnimationTimer timer;
 
@@ -63,6 +65,7 @@ public class SimulationHandler {
     }
 
     private void updateSim(){
+        ArrayList<Particle> compareTo = new ArrayList<>(allParticles);
         for(Particle p1 : allParticles){
             double maxFactorX = 1;//max factor for the direction vector to hit the border on the x-axis on
             if(p1.getDirection_vec().getX() > 0){
@@ -77,8 +80,8 @@ public class SimulationHandler {
                 maxFactorY = (simPane.getLayoutY()-(p1.getCircle().getCenterY()-Particle.RADIUS))/p1.getDirection_vec().getY();
             }
 
-            for(Particle p2 : allParticles){
-                if(p1 == p2) continue;
+            compareTo.remove(p1);
+            for(Particle p2 : compareTo){
 
                 /* solve for t (factor for the vectors at which the particles collide and "end of collision"):
                    a1 := coords of p1
@@ -118,14 +121,30 @@ public class SimulationHandler {
                 if(discriminant >= 0){ //collision
                     double t1 = ( -factorB - Math.sqrt(discriminant) )  / (2*factorA); // (-b - sqrt(b^2 - 4ac)) / 2a
                     double t2 = ( -(factorB) + Math.sqrt(discriminant) ) / (2*factorA); // (-b + sqrt(b^2 - 4ac)) / 2a
-                    System.out.println("TEST2");
-                    if(t1 <= 1 || (t2 <= 1 && t1 < 0)) System.out.println("COLLISION");
+                    System.out.println("t1: "+t1);
+                    System.out.println("t2: "+t2);
+                    if((t1 >= 0 && t1 <= 1) || (t2 <= 1 && t1 < 0)){
+                        System.out.println("COLLISION");
+                        p1.setDirection_vec(p1.getDirection_vec().multiply(-1));
+                        p2.setDirection_vec(p2.getDirection_vec().multiply(-1));
+                        if(p1.getState() == p2.getState()){
+                            if(p1.getState() == Particle.State.A){
+                                p1.setState(Particle.State.B);
+                                p2.setState(Particle.State.B);
+                            }else{
+                                p1.setState(Particle.State.A);
+                                p1.setState(Particle.State.A);
+                            }
+                        }
+                    }
                 }
             }
 
             if(maxFactorX >= 1 && maxFactorY >= 1){
-                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec().getX());
-                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec().getY());
+                p1.setCoordinates(new Point2D(
+                    p1.getCircle().getCenterX()+p1.getDirection_vec().getX(),
+                    p1.getCircle().getCenterY()+p1.getDirection_vec().getY()
+                ));
             }else{
                 double beforeReflect = Math.min(maxFactorX, maxFactorY); //the percentage of the vector applied before reflecting of a wall
 
@@ -135,8 +154,10 @@ public class SimulationHandler {
                 if(maxFactorX < maxFactorY) p1.setDirection_vec(new Point2D(p1.getDirection_vec().getX()*(-1), p1.getDirection_vec().getY()));
                 else p1.setDirection_vec(new Point2D(p1.getDirection_vec().getX(), p1.getDirection_vec().getY()*(-1)));
 
-                p1.getCircle().setCenterX(p1.getCircle().getCenterX()+p1.getDirection_vec().getX()*(1-beforeReflect));
-                p1.getCircle().setCenterY(p1.getCircle().getCenterY()+p1.getDirection_vec().getY()*(1-beforeReflect));
+                p1.setCoordinates(new Point2D(
+                    p1.getCircle().getCenterX()+p1.getDirection_vec().getX()*(1-beforeReflect),
+                    p1.getCircle().getCenterY()+p1.getDirection_vec().getY()*(1-beforeReflect)
+                ));
             }
         }
     }
@@ -249,5 +270,9 @@ public class SimulationHandler {
 
     public ArrayList<Particle> getParticlesB(){
         return allParticles.stream().filter(p -> p.getState() == Particle.State.B).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public int getGamestate() {
+        return gamestate;
     }
 }

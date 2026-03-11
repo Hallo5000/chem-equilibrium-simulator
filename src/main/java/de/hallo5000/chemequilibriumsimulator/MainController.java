@@ -49,32 +49,32 @@ public class MainController {
         sliderActivationEnergy.setMax(100);
         sliderActivationEnergy.setValue(50);
 
-        sliderParticleCountA.valueProperty().addListener((observable, oldValue, newValue) -> {
+        sliderParticleCountA.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                sliderParticleCountA.setValue(simulationHandler.setParticleCountA((int) sliderParticleCountA.getValue()));
-                ParticleCountAOutput.setText(Integer.toString(simulationHandler.getParticleCountA()));
-                updateParticleBar(simulationHandler.getParticleCountA(), simulationHandler.getParticleCountB());
+                if(simulationHandler.getGamestate() == 1) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
+                ParticleCountAOutput.setText(Integer.toString((int) sliderParticleCountA.getValue()));
+                updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
         });
 
-        sliderParticleCountB.valueProperty().addListener((observable, oldValue, newValue) -> {
+        sliderParticleCountB.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                sliderParticleCountB.setValue(simulationHandler.setParticleCountB((int) sliderParticleCountB.getValue()));
-                ParticleCountBOutput.setText(Integer.toString(simulationHandler.getParticleCountB()));
-                updateParticleBar(simulationHandler.getParticleCountA(), simulationHandler.getParticleCountB());
+                if(simulationHandler.getGamestate() == 1) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
+                ParticleCountBOutput.setText(Integer.toString((int) sliderParticleCountB.getValue()));
+                updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
         });
 
-        sliderAvgSpeed.valueProperty().addListener((observable, oldValue, newValue) -> {
+        sliderAvgSpeed.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setAvgInitParticleSpeed(sliderAvgSpeed.getValue());
-                avgSpeedOutput.setText(String.format("%.2f", simulationHandler.getAvgInitParticleSpeed()));
+                simulationHandler.setAvgInitParticleSpeed((int)(newValue.doubleValue()*100));
+                avgSpeedOutput.setText(Double.toString(simulationHandler.getAvgInitParticleSpeed()/100.0));
             }
         });
 
-        sliderActivationEnergy.valueProperty().addListener((observable, oldValue, newValue) -> {
+        sliderActivationEnergy.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setActivationEnergy(sliderActivationEnergy.getValue());
+                simulationHandler.setActivationEnergy(newValue.intValue());
                 activationEnergyOutput.setText(Integer.toString((int) simulationHandler.getActivationEnergy()));
             }
         });
