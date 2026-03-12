@@ -95,6 +95,8 @@ public class MainController {
 
         if (countB == 0) {
             barA.setStyle("-fx-background-color: #BA6F02; -fx-background-radius: 8;");
+        } else {
+            barA.setStyle("-fx-background-color: #BA6F02; -fx-background-radius: 8 0 0 8;");
         }
         if (countA == 0) {
             barB.setStyle("-fx-background-color: #822B4A; -fx-background-radius: 8;");
