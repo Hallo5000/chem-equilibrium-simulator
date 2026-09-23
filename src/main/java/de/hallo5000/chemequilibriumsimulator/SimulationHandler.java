@@ -11,6 +11,12 @@ import java.util.stream.Collectors;
 
 public class SimulationHandler {
 
+    public enum GameState{
+        RUNNING,
+        PAUSED,
+        STOPPED
+    }
+
     private int particleCountA;
     private int particleCountB;
     private double avgInitParticleSpeed;
@@ -18,9 +24,7 @@ public class SimulationHandler {
     private final ArrayList<Particle> allParticles = new ArrayList<>();
     private final AnchorPane simPane;
 
-    // gamestate == 0 -> simulation is stopped/paused
-    // gamestate == 1 -> simulation is running
-    private int gamestate = 0;
+    private GameState gamestate = GameState.STOPPED;
     private AnimationTimer timer;
 
     public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed, double activationEnergy, AnchorPane simPane){
@@ -32,8 +36,8 @@ public class SimulationHandler {
     }
 
     public void initSim(){
-        if(gamestate == 1) return;
-        gamestate = 1;
+        if(gamestate == GameState.RUNNING) return;
+        gamestate = GameState.RUNNING;
         allParticles.clear();
         simPane.getChildren().clear();//clear the arraylist and simPane
         for(int i = 0; i < particleCountA; i++){
@@ -163,18 +167,20 @@ public class SimulationHandler {
     }
 
     public void stopSim(){
+        if(gamestate == GameState.STOPPED) return;
+        gamestate = GameState.STOPPED;
         timer.stop();
-        gamestate = 0;
         particleCountA = 0;
         particleCountB = 0;
         allParticles.clear();
         simPane.getChildren().clear();
     }
 
-    public boolean collision(Particle a, Particle b){
-        return false;
-    }
-
+    /**
+     * Tries to generate random coordinates that are not taken within the simPane
+     * @param remainingTries specifies how often it will try
+     * @return a <code>Point2D</code> which represents a point in the simPane with <code>Particle.RADIUS</code> free space
+     */
     public Point2D genRandomCoords(int remainingTries){
         if(remainingTries <= 0) return null;
         double x = new Random().nextDouble() * simPane.getWidth() - Particle.RADIUS;
@@ -272,7 +278,7 @@ public class SimulationHandler {
         return allParticles.stream().filter(p -> p.getState() == Particle.State.B).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public int getGamestate() {
+    public GameState getGamestate() {
         return gamestate;
     }
 }

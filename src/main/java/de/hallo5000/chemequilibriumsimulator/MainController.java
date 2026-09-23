@@ -51,7 +51,7 @@ public class MainController {
 
         sliderParticleCountA.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() == 1) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
+                if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
                 ParticleCountAOutput.setText(Integer.toString((int) sliderParticleCountA.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
@@ -59,7 +59,7 @@ public class MainController {
 
         sliderParticleCountB.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() == 1) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
+                if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
                 ParticleCountBOutput.setText(Integer.toString((int) sliderParticleCountB.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
