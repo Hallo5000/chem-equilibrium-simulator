@@ -5,7 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
-public class ParticleWrapper extends Particle{
+public class ParticleWrapper extends Particle {
 
     private final AnchorPane simPane;
     private final Circle circle;
@@ -21,6 +21,15 @@ public class ParticleWrapper extends Particle{
 
     public ParticleWrapper(Point2D coordinates, Point2D directionVec, double speed, State state){
         this(coordinates, directionVec, speed, state, MainApplication.simulationHandler.getSimPane());
+    }
+
+    public void updateView() {
+        circle.setCenterX(getCoordinates().getX());
+        circle.setCenterY(getCoordinates().getY());
+        Paint targetPaint = getState() == State.A ? Paint.valueOf("#BA6F02") : Paint.valueOf("#822B4A");
+        if (!circle.getFill().equals(targetPaint)) {
+            circle.setFill(targetPaint);
+        }
     }
 
     public AnchorPane getSimPane() {
