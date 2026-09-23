@@ -21,7 +21,7 @@ public class SimulationHandler {
     private int particleCountB;
     private double avgInitParticleSpeed;
     private double activationEnergy;
-    private final ArrayList<Particle> allParticles = new ArrayList<>();
+    private final ArrayList<ParticleWrapper> allParticles = new ArrayList<>();
     private final AnchorPane simPane;
 
     private GameState gamestate = GameState.STOPPED;
@@ -43,12 +43,12 @@ public class SimulationHandler {
         for(int i = 0; i < particleCountA; i++){
             Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.A));
+            allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A, simPane));
         }
         for(int i = 0; i < particleCountB; i++){
             Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
             if(coords == null) break;
-            allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.B));
+            allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B, simPane));
         }
         simLoop(); //start moving particles
     }
@@ -69,7 +69,7 @@ public class SimulationHandler {
     }
 
     private void updateSim(){
-        ArrayList<Particle> compareTo = new ArrayList<>(allParticles);
+        /*ArrayList<Particle> compareTo = new ArrayList<>(allParticles);
         for(Particle p1 : allParticles){
             double maxFactorX = 1;//max factor for the direction vector to hit the border on the x-axis on
             if(p1.getDirection_vec().getX() > 0){
@@ -107,7 +107,7 @@ public class SimulationHandler {
                     (d(bx)^2+d(by)^2)*t^2+(2d(ax)d(bx)+2d(ay)d(by))*t+(-4R^2+d(ax)^2+d(ay)^2)=0
                     -----quadratic formula
                     t1,2=( -(2d(ax)d(bx)+2d(ay)d(by)) +/- sqrt( (2d(ax)d(bx)+2d(ay)d(by))^2 - 4(d(bx)^2+d(by)^2)(-4R^2+d(ax)^2+d(ay)^2) ) )/2(d(bx)^2+d(by)^2)
-                 */
+                 * /
 
 
                 Point2D deltaP = p1.getCoordinates().subtract(p2.getCoordinates());
@@ -163,7 +163,7 @@ public class SimulationHandler {
                     p1.getCircle().getCenterY()+p1.getDirection_vec().getY()*(1-beforeReflect)
                 ));
             }
-        }
+        }*/
     }
 
     public void stopSim(){
@@ -217,11 +217,11 @@ public class SimulationHandler {
             for(int i = 0; i < particleCountA - this.particleCountA; i++){
                 Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.A));
+                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A, simPane));
             }
         }else if(particleCountA < this.particleCountA){
             for(int i = 0; i < this.particleCountA - particleCountA; i++){
-                Particle toRemove = getParticlesA().get(new Random().nextInt(getParticlesA().size()));
+                ParticleWrapper toRemove = getParticlesA().get(new Random().nextInt(getParticlesA().size()));
                 allParticles.remove(toRemove);
                 simPane.getChildren().remove(toRemove.getCircle());
             }
@@ -240,11 +240,11 @@ public class SimulationHandler {
             for(int i = 0; i < particleCountB - this.particleCountB; i++){
                 Point2D coords = MainApplication.simulationHandler.genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new Particle(coords, genRandomVector(), 0, simPane, Particle.State.B));
+                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B, simPane));
             }
         }else if(particleCountB < this.particleCountB){
             for(int i = 0; i < this.particleCountB - particleCountB; i++){
-                Particle toRemove = getParticlesB().get(new Random().nextInt(getParticlesB().size()));
+                ParticleWrapper toRemove = getParticlesB().get(new Random().nextInt(getParticlesB().size()));
                 allParticles.remove(toRemove);
                 simPane.getChildren().remove(toRemove.getCircle());
             }
@@ -270,15 +270,19 @@ public class SimulationHandler {
         this.activationEnergy = activationEnergy;
     }
 
-    public ArrayList<Particle> getParticlesA(){
+    public ArrayList<ParticleWrapper> getParticlesA(){
         return allParticles.stream().filter(p -> p.getState() == Particle.State.A).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<Particle> getParticlesB(){
+    public ArrayList<ParticleWrapper> getParticlesB(){
         return allParticles.stream().filter(p -> p.getState() == Particle.State.B).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public GameState getGamestate() {
         return gamestate;
+    }
+
+    public AnchorPane getSimPane() {
+        return simPane;
     }
 }
