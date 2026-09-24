@@ -126,6 +126,15 @@ public class MainController {
         particleBar.setClip(particleBarClip);
     }
 
+    public void updateParticleSliders(int countA, int countB){
+        if (simulationHandler != null) {
+            sliderParticleCountA.setValue(countA);
+            ParticleCountAOutput.setText(Integer.toString(countA));
+            sliderParticleCountB.setValue(countB);
+            ParticleCountBOutput.setText(Integer.toString(countB));
+        }
+    }
+
     public void updateParticleBar(int countA, int countB) {
         labelCountA.setText("A: " + countA);
         labelCountB.setText("B: " + countB);

@@ -35,12 +35,13 @@ public class SimulationHandler {
     private MainController mainController;
 
     public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed,
-            double activationEnergy, AnchorPane simPane) {
+            double activationEnergy, AnchorPane simPane, MainController mainController) {
         this.particleCountA = particleCountA;
         this.particleCountB = particleCountB;
         this.avgInitParticleSpeed = avgInitParticleSpeed;
         this.activationEnergy = activationEnergy;
         this.simPane = simPane;
+        this.mainController = mainController;
     }
 
     public void initSim() {
@@ -97,10 +98,8 @@ public class SimulationHandler {
                         p.updateView();
                     }
                     if (mainController != null) {
-                        mainController.updateParticleBar(
-                                (int) allParticles.stream().filter(p -> p.getState() == Particle.State.A).count(),
-                                (int) allParticles.stream().filter(p -> p.getState() == Particle.State.B).count()
-                        );
+                        mainController.updateParticleBar(particleCountA, particleCountB);
+                        mainController.updateParticleSliders(particleCountA, particleCountB);
                     }
                 }
             }
@@ -191,9 +190,13 @@ public class SimulationHandler {
                                 if (p1.getState() == Particle.State.A) {
                                     p1.setState(Particle.State.B);
                                     p2.setState(Particle.State.B);
+                                    particleCountA -= 2;
+                                    particleCountB += 2;
                                 } else {
                                     p1.setState(Particle.State.A);
                                     p2.setState(Particle.State.A);
+                                    particleCountA += 2;
+                                    particleCountB -= 2;
                                 }
                             }
                         }
@@ -406,7 +409,4 @@ public class SimulationHandler {
         return simPane;
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 }
