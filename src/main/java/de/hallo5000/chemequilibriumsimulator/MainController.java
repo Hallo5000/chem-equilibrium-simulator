@@ -1,12 +1,16 @@
 package de.hallo5000.chemequilibriumsimulator;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
 public class MainController {
+
+    @FXML private Button startButton;
+    @FXML private Button stopButton;
 
     @FXML private Slider sliderParticleCountA;
     @FXML private Slider sliderParticleCountB;
@@ -49,9 +53,28 @@ public class MainController {
         sliderActivationEnergy.setMax(100);
         sliderActivationEnergy.setValue(50);
 
+        startButton.setOnAction(_ -> {
+            if(simulationHandler.getGamestate() == SimulationHandler.GameState.STOPPED) {
+                startSim();
+                startButton.setText("⏸  Pause");
+            }
+            else if(simulationHandler.getGamestate() == SimulationHandler.GameState.PAUSED) {
+                simulationHandler.setGamestate(SimulationHandler.GameState.RUNNING);
+                startButton.setText("⏸  Pause");
+            }
+            else if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) {
+                simulationHandler.setGamestate(SimulationHandler.GameState.PAUSED);
+                startButton.setText("▶  Start");
+            }
+        });
+
+        stopButton.setOnAction(_ -> {
+            stopSim();
+        });
+
         sliderParticleCountA.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
+                if(simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
                 ParticleCountAOutput.setText(Integer.toString((int) sliderParticleCountA.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
@@ -59,7 +82,7 @@ public class MainController {
 
         sliderParticleCountB.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
+                if(simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
                 ParticleCountBOutput.setText(Integer.toString((int) sliderParticleCountB.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
@@ -105,7 +128,7 @@ public class MainController {
         }
     }
 
-    @FXML void startSim() {
+    private void startSim() {
         int countA = (int) sliderParticleCountA.getValue();
         int countB = (int) sliderParticleCountB.getValue();
         double avgSpeed = sliderAvgSpeed.getValue();
@@ -121,8 +144,9 @@ public class MainController {
         }
     }
 
-    @FXML public void stopSim() {
+    private void stopSim() {
         if (simulationHandler != null) {
+            startButton.setText("▶  Start");
             simulationHandler.stopSim();
             updateParticleBar(0, 0);
         }

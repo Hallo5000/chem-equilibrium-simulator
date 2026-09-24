@@ -16,8 +16,8 @@
 
                <!-- Buttons -->
                <HBox spacing="10.0">
-                  <Button mnemonicParsing="false" onAction="#startSim" prefWidth="75.0" style="-fx-background-color: #2A6496; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 12px;" text="▶  Start" />
-                  <Button mnemonicParsing="false" onAction="#stopSim" prefWidth="75.0" style="-fx-background-color: #1E4A6E; -fx-text-fill: #7AAFC8; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 12px;" text="■  Stop" />
+                  <Button fx:id="startButton" mnemonicParsing="false" prefWidth="75.0" style="-fx-background-color: #2A6496; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 12px;" text="▶  Start" />
+                  <Button fx:id="stopButton" mnemonicParsing="false" prefWidth="75.0" style="-fx-background-color: #1E4A6E; -fx-text-fill: #7AAFC8; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 12px;" text="■  Stop" />
                </HBox>
 
                <!-- Slider for Particle Count A -->

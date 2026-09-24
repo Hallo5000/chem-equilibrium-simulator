@@ -333,6 +333,10 @@ public class SimulationHandler {
         return gamestate;
     }
 
+    public void setGamestate(GameState gamestate) {
+        this.gamestate = gamestate;
+    }
+
     public AnchorPane getSimPane() {
         return simPane;
     }
