@@ -87,9 +87,9 @@
                            </HBox>
                        </HBox>
                        <HBox fx:id="particleBar" prefHeight="16.0" style="-fx-background-color: #0C1E2D; -fx-background-radius: 8;">
-                           <Region fx:id="barA" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #BA6F02; -fx-background-radius: 8 0 0 8;" />
+                           <Region fx:id="barA" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #BA6F02;" />
                            <Region fx:id="barEmpty" prefHeight="16.0" HBox.hgrow="ALWAYS" />
-                           <Region fx:id="barB" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #822B4A; -fx-background-radius: 0 8 8 0;" />
+                           <Region fx:id="barB" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #822B4A;" />
                        </HBox>
                    </VBox>
                </children>

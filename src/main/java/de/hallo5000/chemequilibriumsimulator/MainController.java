@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Rectangle;
 
 public class MainController {
 
@@ -101,6 +102,14 @@ public class MainController {
                 activationEnergyOutput.setText(Integer.toString((int) simulationHandler.getActivationEnergy()));
             }
         });
+
+        // Clip for particle bar to get the rounded corners
+        Rectangle particleBarClip = new Rectangle();
+        particleBarClip.widthProperty().bind(particleBar.widthProperty());
+        particleBarClip.heightProperty().bind(particleBar.heightProperty());
+        particleBarClip.setArcWidth(16);
+        particleBarClip.setArcHeight(16);
+        particleBar.setClip(particleBarClip);
     }
 
     public void updateParticleBar(int countA, int countB) {
@@ -115,17 +124,6 @@ public class MainController {
         }
         barA.setPrefWidth((countA / total) * barlength);
         barB.setPrefWidth((countB / total) * barlength);
-
-        if (countB == 0) {
-            barA.setStyle("-fx-background-color: #BA6F02; -fx-background-radius: 8;");
-        } else {
-            barA.setStyle("-fx-background-color: #BA6F02; -fx-background-radius: 8 0 0 8;");
-        }
-        if (countA == 0) {
-            barB.setStyle("-fx-background-color: #822B4A; -fx-background-radius: 8;");
-        } else {
-            barB.setStyle("-fx-background-color: #822B4A; -fx-background-radius: 0 8 8 0;");
-        }
     }
 
     private void startSim() {
