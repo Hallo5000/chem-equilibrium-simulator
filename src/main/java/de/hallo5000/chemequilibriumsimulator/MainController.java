@@ -10,26 +10,41 @@ import javafx.scene.shape.Rectangle;
 
 public class MainController {
 
-    @FXML private Button startButton;
-    @FXML private Button stopButton;
+    @FXML
+    private Button startButton;
+    @FXML
+    private Button stopButton;
 
-    @FXML private Slider sliderParticleCountA;
-    @FXML private Slider sliderParticleCountB;
-    @FXML private Slider sliderAvgSpeed;
-    @FXML private Slider sliderActivationEnergy;
+    @FXML
+    private Slider sliderParticleCountA;
+    @FXML
+    private Slider sliderParticleCountB;
+    @FXML
+    private Slider sliderAvgSpeed;
+    @FXML
+    private Slider sliderActivationEnergy;
 
-    //Output der slider values
-    @FXML private Label ParticleCountAOutput;
-    @FXML private Label ParticleCountBOutput;
-    @FXML private Label avgSpeedOutput;
-    @FXML private Label activationEnergyOutput;
+    // Output der slider values
+    @FXML
+    private Label ParticleCountAOutput;
+    @FXML
+    private Label ParticleCountBOutput;
+    @FXML
+    private Label avgSpeedOutput;
+    @FXML
+    private Label activationEnergyOutput;
 
     // Particle Bar
-    @FXML private HBox particleBar;
-    @FXML private Region barA;
-    @FXML private Region barB;
-    @FXML private Label labelCountA;
-    @FXML private Label labelCountB;
+    @FXML
+    private HBox particleBar;
+    @FXML
+    private Region barA;
+    @FXML
+    private Region barB;
+    @FXML
+    private Label labelCountA;
+    @FXML
+    private Label labelCountB;
 
     private SimulationHandler simulationHandler;
 
@@ -37,7 +52,8 @@ public class MainController {
         this.simulationHandler = simulationHandler;
     }
 
-    @FXML public void initialize() {
+    @FXML
+    public void initialize() {
         sliderParticleCountA.setMin(0);
         sliderParticleCountA.setMax(100);
         sliderParticleCountA.setValue(10);
@@ -55,15 +71,13 @@ public class MainController {
         sliderActivationEnergy.setValue(50);
 
         startButton.setOnAction(_ -> {
-            if(simulationHandler.getGamestate() == SimulationHandler.GameState.STOPPED) {
+            if (simulationHandler.getGamestate() == SimulationHandler.GameState.STOPPED) {
                 startSim();
                 startButton.setText("⏸  Pause");
-            }
-            else if(simulationHandler.getGamestate() == SimulationHandler.GameState.PAUSED) {
+            } else if (simulationHandler.getGamestate() == SimulationHandler.GameState.PAUSED) {
                 simulationHandler.setGamestate(SimulationHandler.GameState.RUNNING);
                 startButton.setText("⏸  Pause");
-            }
-            else if(simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) {
+            } else if (simulationHandler.getGamestate() == SimulationHandler.GameState.RUNNING) {
                 simulationHandler.setGamestate(SimulationHandler.GameState.PAUSED);
                 startButton.setText("▶  Start");
             }
@@ -73,7 +87,8 @@ public class MainController {
 
         sliderParticleCountA.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED) sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
+                if (simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED)
+                    sliderParticleCountA.setValue(simulationHandler.setParticleCountA(newValue.intValue()));
                 ParticleCountAOutput.setText(Integer.toString((int) sliderParticleCountA.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
@@ -81,7 +96,8 @@ public class MainController {
 
         sliderParticleCountB.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                if(simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED) sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
+                if (simulationHandler.getGamestate() != SimulationHandler.GameState.STOPPED)
+                    sliderParticleCountB.setValue(simulationHandler.setParticleCountB(newValue.intValue()));
                 ParticleCountBOutput.setText(Integer.toString((int) sliderParticleCountB.getValue()));
                 updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
             }
@@ -89,8 +105,8 @@ public class MainController {
 
         sliderAvgSpeed.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setAvgInitParticleSpeed((int)(newValue.doubleValue()*100));
-                avgSpeedOutput.setText(Double.toString(simulationHandler.getAvgInitParticleSpeed()/100.0));
+                simulationHandler.setAvgInitParticleSpeed(newValue.doubleValue());
+                avgSpeedOutput.setText(String.format("%.2f", simulationHandler.getAvgInitParticleSpeed()));
             }
         });
 

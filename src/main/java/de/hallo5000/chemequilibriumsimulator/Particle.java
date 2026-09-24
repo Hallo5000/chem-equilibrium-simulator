@@ -46,6 +46,10 @@ public abstract class Particle {
         return speed;
     }
 
+    public Point2D getVelocity() {
+        return direction_vec.multiply(speed);
+    }
+
     public void setSpeed(double speed) {
         this.speed = speed;
     }
