@@ -32,6 +32,7 @@ public class SimulationHandler {
     private GameState gamestate = GameState.STOPPED;
     private AnimationTimer timer;
     private ScheduledExecutorService physicsExecutor;
+    private MainController mainController;
 
     public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed,
             double activationEnergy, AnchorPane simPane) {
@@ -94,6 +95,12 @@ public class SimulationHandler {
                 synchronized (allParticles) {
                     for (ParticleWrapper p : allParticles) {
                         p.updateView();
+                    }
+                    if (mainController != null) {
+                        mainController.updateParticleBar(
+                                (int) allParticles.stream().filter(p -> p.getState() == Particle.State.A).count(),
+                                (int) allParticles.stream().filter(p -> p.getState() == Particle.State.B).count()
+                        );
                     }
                 }
             }
@@ -397,5 +404,9 @@ public class SimulationHandler {
 
     public AnchorPane getSimPane() {
         return simPane;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

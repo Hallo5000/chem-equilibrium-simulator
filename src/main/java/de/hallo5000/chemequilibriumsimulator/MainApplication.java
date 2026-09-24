@@ -24,5 +24,6 @@ public class MainApplication extends javafx.application.Application {
         MainController controller = fxmlLoader.getController();
         simulationHandler = new SimulationHandler(0, 0, 0.0, 0.0,  (AnchorPane) scene.lookup("#simPane"));
         controller.setSimulationHandler(simulationHandler);
+        simulationHandler.setMainController(controller);
     }
 }
