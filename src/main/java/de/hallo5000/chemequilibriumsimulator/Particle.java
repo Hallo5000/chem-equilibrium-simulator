@@ -17,7 +17,7 @@ public abstract class Particle {
     private double speed;
     private State state;
 
-    public static int RADIUS = 10;
+    public final static int RADIUS = 10;
 
     public Particle(Point2D coordinates, Point2D directionVec, double speed, State state) {
         this.coordinates = coordinates;

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0C1E2D;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hallo5000.chemequilibriumsimulator.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0C1E2D;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hallo5000.chemequilibriumsimulator.MainController">
    <children>
 
       <!-- Sidebar -->
@@ -51,7 +57,7 @@
                <VBox spacing="5.0">
                    <HBox spacing="5.0">
                        <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Activation Energy" />
-                       <Label fx:id="activationEnergyOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="50" />
+                       <Label fx:id="activationEnergyOutput" style="-fx-text-fill: #ffff; -fx-font-size: 12px;" text="1.0" />
                    </HBox>
                    <Slider fx:id="sliderActivationEnergy" style="-fx-control-inner-background: #1E4A6E; -fx-accent: #2A6496;" />
                </VBox>
@@ -65,11 +71,7 @@
          <items>
 
             <!-- Simulation -->
-            <AnchorPane fx:id="simPane" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #0C1E2D; -fx-background-radius: 12; -fx-border-color: #1E4A6E; -fx-border-width: 1; -fx-border-radius: 12;">
-               <children>
-                  <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px;" text="Simulation" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0" />
-               </children>
-            </AnchorPane>
+            <AnchorPane fx:id="simPane" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #0C1E2D; -fx-background-radius: 12; -fx-border-color: #1E4A6E; -fx-border-width: 1; -fx-border-radius: 12;" />
 
             <!-- Stats -->
             <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #15344D; -fx-background-radius: 12; -fx-border-color: #1E4A6E; -fx-border-width: 1; -fx-border-radius: 12;">
@@ -77,19 +79,18 @@
                   <Label style="-fx-text-fill: #7AAFC8; -fx-font-size: 12px; -fx-font-weight: bold;" text="Stats" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0" />
 
                    <!-- Progressbar -->
-                   <VBox spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="15.0">
+                   <VBox spacing="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                        <HBox>
                            <HBox HBox.hgrow="ALWAYS">
                                <Label fx:id="labelCountA" style="-fx-text-fill: #BA6F02; -fx-font-size: 11px; -fx-font-weight: bold;" text="A: 0" />
                            </HBox>
-                           <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                           <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                <Label fx:id="labelCountB" style="-fx-text-fill: #822B4A; -fx-font-size: 11px; -fx-font-weight: bold;" text="B: 0" />
                            </HBox>
                        </HBox>
                        <HBox fx:id="particleBar" prefHeight="16.0" style="-fx-background-color: #0C1E2D; -fx-background-radius: 8;">
-                           <Region fx:id="barA" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #BA6F02;" />
-                           <Region fx:id="barEmpty" prefHeight="16.0" HBox.hgrow="ALWAYS" />
-                           <Region fx:id="barB" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #822B4A;" />
+                           <Region fx:id="barA" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #BA6F02;" HBox.hgrow="SOMETIMES" />
+                           <Region fx:id="barB" prefHeight="16.0" prefWidth="0.0" style="-fx-background-color: #822B4A;" HBox.hgrow="SOMETIMES" />
                        </HBox>
                    </VBox>
                </children>

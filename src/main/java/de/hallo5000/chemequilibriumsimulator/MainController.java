@@ -62,13 +62,15 @@ public class MainController {
         sliderParticleCountB.setMax(100);
         sliderParticleCountB.setValue(10);
 
+        updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
+
         sliderAvgSpeed.setMin(0);
         sliderAvgSpeed.setMax(1);
         sliderAvgSpeed.setValue(0.5);
 
         sliderActivationEnergy.setMin(0);
-        sliderActivationEnergy.setMax(100);
-        sliderActivationEnergy.setValue(50);
+        sliderActivationEnergy.setMax(2.0);
+        sliderActivationEnergy.setValue(1.0);
 
         startButton.setOnAction(_ -> {
             if (simulationHandler.getGamestate() == SimulationHandler.GameState.STOPPED) {
@@ -112,8 +114,8 @@ public class MainController {
 
         sliderActivationEnergy.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
-                simulationHandler.setActivationEnergy(newValue.intValue());
-                activationEnergyOutput.setText(Integer.toString((int) simulationHandler.getActivationEnergy()));
+                simulationHandler.setActivationEnergy(newValue.doubleValue());
+                activationEnergyOutput.setText(String.format("%.2f", simulationHandler.getActivationEnergy()));
             }
         });
 
@@ -140,7 +142,7 @@ public class MainController {
         labelCountB.setText("B: " + countB);
         double total = countA + countB;
         double barlength = particleBar.getWidth();
-        if (total == 0 || barlength == 0) {
+        if (barlength == 0) {
             barA.setPrefWidth(0);
             barB.setPrefWidth(0);
             return;
@@ -169,7 +171,7 @@ public class MainController {
         if (simulationHandler != null) {
             startButton.setText("▶  Start");
             simulationHandler.stopSim();
-            updateParticleBar(0, 0);
+            updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
         }
     }
 }

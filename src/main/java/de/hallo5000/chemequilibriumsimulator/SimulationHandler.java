@@ -32,7 +32,11 @@ public class SimulationHandler {
     private GameState gamestate = GameState.STOPPED;
     private AnimationTimer timer;
     private ScheduledExecutorService physicsExecutor;
-    private MainController mainController;
+    private final MainController mainController;
+
+    //remove when collisions are fully working: (just debugging)
+    private int collisionsS = 0;
+    private int collisionsF = 0;
 
     public SimulationHandler(int particleCountA, int particleCountB, double avgInitParticleSpeed,
             double activationEnergy, AnchorPane simPane, MainController mainController) {
@@ -180,25 +184,34 @@ public class SimulationHandler {
                     if (discriminant >= 0) { // collision
                         double t1 = (-factorB - Math.sqrt(discriminant)) / (2 * factorA); // (-b - sqrt(b^2 - 4ac)) / 2a
                         if (t1 >= 0 && t1 <= 1) {
+                            double angle = Math.acos(p1.getDirection_vec().dotProduct(p2.getDirection_vec()) /
+                                    p1.getDirection_vec().magnitude()*p2.getDirection_vec().magnitude());
+                            if((p1.getSpeed()+p2.getSpeed())*((angle%Math.PI)/Math.PI) > activationEnergy){//check activation energy
+                                System.out.println("success: "+angle);//debugging
+                                collisionsS++;//debugging
+                                if (p1.getState() == p2.getState()) {
+                                    if (p1.getState() == Particle.State.A) {
+                                        p1.setState(Particle.State.B);
+                                        p2.setState(Particle.State.B);
+                                        particleCountA -= 2;
+                                        particleCountB += 2;
+                                    } else {
+                                        p1.setState(Particle.State.A);
+                                        p2.setState(Particle.State.A);
+                                        particleCountA += 2;
+                                        particleCountB -= 2;
+                                    }
+                                }
+                            }else {//remove when collisions are fully working: (just debugging)
+                                System.out.println("fail: "+angle);
+                                collisionsF++;
+                            }
+
                             Point2D normal = deltaP.add(deltaV.multiply(t1)).normalize();
                             double impulse = deltaV.dotProduct(normal);
                             applyVelocity(p1, p1.getVelocity().subtract(normal.multiply(impulse)));
                             applyVelocity(p2, p2.getVelocity().add(normal.multiply(impulse)));
                             v1 = p1.getVelocity();
-
-                            if (p1.getState() == p2.getState()) {
-                                if (p1.getState() == Particle.State.A) {
-                                    p1.setState(Particle.State.B);
-                                    p2.setState(Particle.State.B);
-                                    particleCountA -= 2;
-                                    particleCountB += 2;
-                                } else {
-                                    p1.setState(Particle.State.A);
-                                    p2.setState(Particle.State.A);
-                                    particleCountA += 2;
-                                    particleCountB -= 2;
-                                }
-                            }
                         }
                     }
                 }
@@ -257,6 +270,10 @@ public class SimulationHandler {
             allParticles.clear();
             simPane.getChildren().clear();
         }
+        //remove when collisions are fully working: (just debugging)
+        System.out.println(collisionsS+" : "+collisionsF);
+        collisionsS = 0;
+        collisionsF = 0;
     }
 
     /**
