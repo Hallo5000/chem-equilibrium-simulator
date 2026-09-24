@@ -13,7 +13,7 @@ public class ParticleWrapper extends Particle {
     public ParticleWrapper(Point2D coordinates, Point2D directionVec, double speed, State state, AnchorPane simPane){
         super(coordinates, directionVec, speed, state);
         this.simPane = simPane;
-        Paint paint = getState() == State.A ? Paint.valueOf("#BA6F02") : Paint.valueOf("#822B4A");
+        Paint paint = getState() == State.A ? getColorOfState(State.A) : getColorOfState(State.B);
         circle = new Circle(getCoordinates().getX()+(double)RADIUS/2,
                 getCoordinates().getY()+(double)RADIUS/2, RADIUS, paint);
         simPane.getChildren().add(circle);
@@ -26,10 +26,17 @@ public class ParticleWrapper extends Particle {
     public void updateView() {
         circle.setCenterX(getCoordinates().getX());
         circle.setCenterY(getCoordinates().getY());
-        Paint targetPaint = getState() == State.A ? Paint.valueOf("#BA6F02") : Paint.valueOf("#822B4A");
+        Paint targetPaint = getState() == State.A ? getColorOfState(State.A) : getColorOfState(State.B);
         if (!circle.getFill().equals(targetPaint)) {
             circle.setFill(targetPaint);
         }
+    }
+
+    public static Paint getColorOfState(State state){
+        return switch (state) {
+            case A -> Paint.valueOf("#BA6F02");
+            case B -> Paint.valueOf("#822B4A");
+        };
     }
 
     public AnchorPane getSimPane() {

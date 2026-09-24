@@ -6,8 +6,7 @@ An attempt to simulate chemical equilibrium reactions in an extremely simplified
 - based on JavaFX 25.0.2 (used SceneBuilder)
 
 # Todo:
-- replace fps with cpu bound in sim loop
-- Pause button
 - proper reaction/handling for collisions
 - avg initial speed
 - activation energy
+- cut the simPane in a grid to check for particle collisions (reduces compute time)

@@ -48,12 +48,12 @@ public class SimulationHandler {
             for(int i = 0; i < particleCountA; i++){
                 Point2D coords = genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A, simPane));
+                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A));
             }
             for(int i = 0; i < particleCountB; i++){
                 Point2D coords = genRandomCoords(100);
                 if(coords == null) break;
-                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B, simPane));
+                allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B));
             }
         }
         simLoop(); //start moving particles
@@ -240,11 +240,7 @@ public class SimulationHandler {
         double x = new Random().nextDouble(2.0)-1;//upper bound is excluded,
         double y = new Random().nextDouble(2.0)-1;//but it doesn't matter since the chance of getting it would be near impossible anyway
 
-        double length = Math.sqrt(x*x + y*y);
-        x = x/length;
-        y = y/length;
-
-        return new Point2D(x, y);
+        return new Point2D(x, y).normalize();
     }
 
     public int getParticleCountA(){
@@ -257,7 +253,7 @@ public class SimulationHandler {
                 for(int i = 0; i < particleCountA - this.particleCountA; i++){
                     Point2D coords = genRandomCoords(100);
                     if(coords == null) break;
-                    allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A, simPane));
+                    allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.A));
                 }
             }else if(particleCountA < this.particleCountA){
                 for(int i = 0; i < this.particleCountA - particleCountA; i++){
@@ -284,7 +280,7 @@ public class SimulationHandler {
                 for(int i = 0; i < particleCountB - this.particleCountB; i++){
                     Point2D coords = genRandomCoords(100);
                     if(coords == null) break;
-                    allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B, simPane));
+                    allParticles.add(new ParticleWrapper(coords, genRandomVector(), 0, Particle.State.B));
                 }
             }else if(particleCountB < this.particleCountB){
                 for(int i = 0; i < this.particleCountB - particleCountB; i++){

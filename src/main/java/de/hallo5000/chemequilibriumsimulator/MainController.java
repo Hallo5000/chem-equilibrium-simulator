@@ -69,9 +69,7 @@ public class MainController {
             }
         });
 
-        stopButton.setOnAction(_ -> {
-            stopSim();
-        });
+        stopButton.setOnAction(_ -> stopSim());
 
         sliderParticleCountA.valueProperty().addListener((_, _, newValue) -> {
             if (simulationHandler != null) {
