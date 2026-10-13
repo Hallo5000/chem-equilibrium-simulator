@@ -34,6 +34,12 @@ public class MainController {
     @FXML
     private Label activationEnergyOutput;
 
+    //Stats
+    @FXML
+    private Label collisionsSuccessCount;
+    @FXML
+    private Label collisionsFailsCount;
+
     // Particle Bar
     @FXML
     private HBox particleBar;
@@ -171,7 +177,13 @@ public class MainController {
         if (simulationHandler != null) {
             startButton.setText("▶  Start");
             simulationHandler.stopSim();
+            updateStats();
             updateParticleBar((int) sliderParticleCountA.getValue(), (int) sliderParticleCountB.getValue());
         }
+    }
+
+    public void updateStats() {
+        collisionsSuccessCount.setText(Integer.toString(simulationHandler.getCollisionsS()));
+        collisionsFailsCount.setText(Integer.toString(simulationHandler.getCollisionsF()));
     }
 }

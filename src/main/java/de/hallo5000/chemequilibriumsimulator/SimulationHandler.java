@@ -104,6 +104,7 @@ public class SimulationHandler {
                     if (mainController != null) {
                         mainController.updateParticleBar(particleCountA, particleCountB);
                         mainController.updateParticleSliders(particleCountA, particleCountB);
+                        mainController.updateStats();
                     }
                 }
             }
@@ -426,4 +427,11 @@ public class SimulationHandler {
         return simPane;
     }
 
+    public int getCollisionsF() {
+        return collisionsF;
+    }
+
+    public int getCollisionsS() {
+        return collisionsS;
+    }
 }
